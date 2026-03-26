@@ -316,14 +316,39 @@
 <div class="container">
     <header>
         <div class="logo">Productivity Lab</div>
-        <div class="theme-picker" id="themePicker">
-            <button class="theme-btn btn-rose active" data-theme="rose" title="Rose Blush"></button>
-            <button class="theme-btn btn-midnight" data-theme="midnight" title="Midnight Glow"></button>
-            <button class="theme-btn btn-sage" data-theme="sage" title="Sage Garden"></button>
-            <button class="theme-btn btn-ocean" data-theme="ocean" title="Ocean Breeze"></button>
-            <button class="theme-btn btn-steel" data-theme="steel" title="Steel Minimal"></button>
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+            <div style="position: relative;">
+                <button id="appsBtn" style="background: var(--accent-light); border: 1px solid var(--accent); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--accent);">📱 Apps</button>
+                <div id="appsMenu" style="position: absolute; top: 100%; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; min-width: 180px; z-index: 1000; display: none; margin-top: 0.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); overflow: hidden;">
+                    <button class="dropdown-item" data-app="index.html" style="display: block; width: 100%; padding: 0.75rem 1rem; background: none; border: none; text-align: left; font-family: inherit; font-size: 0.875rem; color: var(--text); cursor: pointer; border-bottom: 1px solid var(--border); transition: background-color 0.2s;">◐ Life in Weeks</button>
+                    <button class="dropdown-item" data-app="fear+death.html" style="display: block; width: 100%; padding: 0.75rem 1rem; background: none; border: none; text-align: left; font-family: inherit; font-size: 0.875rem; color: var(--text); cursor: pointer; border-bottom: 1px solid var(--border); transition: background-color 0.2s;">💀 Memento Mori</button>
+                    <button class="dropdown-item" data-app="fearsetting.html" style="display: block; width: 100%; padding: 0.75rem 1rem; background: none; border: none; text-align: left; font-family: inherit; font-size: 0.875rem; color: var(--text); cursor: pointer; transition: background-color 0.2s;">🎯 Fear Setting</button>
+                </div>
+            </div>
+            <style>
+                .dropdown-item:hover { background: var(--accent-light); }
+                .dropdown-item:last-child { border-bottom: none; }
+            </style>
+            <div class="theme-picker" id="themePicker">
+                <button class="theme-btn btn-rose active" data-theme="rose" title="Rose Blush"></button>
+                <button class="theme-btn btn-midnight" data-theme="midnight" title="Midnight Glow"></button>
+                <button class="theme-btn btn-sage" data-theme="sage" title="Sage Garden"></button>
+                <button class="theme-btn btn-ocean" data-theme="ocean" title="Ocean Breeze"></button>
+                <button class="theme-btn btn-steel" data-theme="steel" title="Steel Minimal"></button>
+            </div>
         </div>
     </header>
+
+    <!-- Context Section -->
+    <div style="margin-bottom: 3rem; padding: 1.5rem; background: var(--accent-light); border: 1px solid var(--border); border-radius: 12px; max-width: 1000px; margin-left: auto; margin-right: auto;">
+        <h2 style="font-size: 1.1rem; margin-bottom: 0.75rem; color: var(--accent);">Fear Setting: The Practice</h2>
+        <p style="line-height: 1.8; color: var(--text); margin-bottom: 0.75rem;">
+            Most people avoid taking action because they fear the worst-case scenario. But rarely do they actually sit down and define what the worst case truly is, or what steps they could take to prevent it or recover from it.
+        </p>
+        <p style="line-height: 1.8; color: var(--text);">
+            By articulating your fears, the probability of them occurring, and your recovery options, you often realize the worst-case scenario is survivable—and far less likely than you thought. This exercise is designed to replace vague anxiety with clear analysis, turning paralyzing fear into actionable plans.
+        </p>
+    </div>
 
     <div class="steps-nav">
         <button class="step-link active" data-step="1">1. Define / Prevent / Repair</button>
@@ -393,6 +418,26 @@
 </div>
 
 <script>
+    // --- Apps Menu Logic ---
+    const appsBtn = document.getElementById('appsBtn');
+    const appsMenu = document.getElementById('appsMenu');
+
+    appsBtn.addEventListener('click', () => {
+        appsMenu.style.display = appsMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.querySelectorAll('#appsMenu .dropdown-item').forEach(item => {
+        item.addEventListener('click', () => {
+            window.location.href = item.dataset.app;
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!appsBtn.contains(e.target) && !appsMenu.contains(e.target)) {
+            appsMenu.style.display = 'none';
+        }
+    });
+
     // --- Theme Logic ---
     const themePicker = document.getElementById('themePicker');
     const themeBtns = document.querySelectorAll('.theme-btn');

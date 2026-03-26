@@ -944,6 +944,14 @@
     <span class="top-label">Life in weeks</span>
     <div class="top-bar-right">
       <div class="top-control">
+        <button class="theme-btn" id="apps-btn" title="View all apps" style="background: var(--accent-light); border: 1px solid var(--accent);">📱 Apps</button>
+        <div class="dropdown-menu" id="apps-menu">
+          <button class="dropdown-item" data-app="index.html">◐ Life in Weeks</button>
+          <button class="dropdown-item" data-app="fear+death.html">💀 Memento Mori</button>
+          <button class="dropdown-item" data-app="fearsetting.html">🎯 Fear Setting</button>
+        </div>
+      </div>
+      <div class="top-control">
         <button class="theme-btn" id="theme-btn" title="Choose color scheme">
           🎨 <span id="theme-label">Theme</span>
         </button>
@@ -2056,8 +2064,10 @@ in this phase</div>
   }
 
   /* ── Theme & Color Schemes ── */
-  const themeBtn = document.getElementById('theme-btn');
-  const themeMenu = document.getElementById('theme-menu');
+  const appsBtn    = document.getElementById('apps-btn');
+  const appsMenu   = document.getElementById('apps-menu');
+  const themeBtn   = document.getElementById('theme-btn');
+  const themeMenu  = document.getElementById('theme-menu');
   const downloadBtn = document.getElementById('download-btn');
   const downloadMenu = document.getElementById('download-menu');
   const themeLabel = document.getElementById('theme-label');
@@ -2100,12 +2110,29 @@ in this phase</div>
 
   // Close menus when clicking outside
   document.addEventListener('click', (e) => {
+    if (!appsBtn.contains(e.target) && !appsMenu.contains(e.target)) {
+      appsMenu.classList.remove('active');
+    }
     if (!themeBtn.contains(e.target) && !themeMenu.contains(e.target)) {
       themeMenu.classList.remove('active');
     }
     if (!downloadBtn.contains(e.target) && !downloadMenu.contains(e.target)) {
       downloadMenu.classList.remove('active');
     }
+  });
+
+  // Apps button and menu
+  appsBtn.addEventListener('click', () => {
+    appsMenu.classList.toggle('active');
+    themeMenu.classList.remove('active');
+    downloadMenu.classList.remove('active');
+  });
+
+  appsMenu.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const app = item.dataset.app;
+      window.location.href = app;
+    });
   });
 
   // Theme button and menu

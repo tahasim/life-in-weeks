@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fear Setting + Memento Mori</title>
+    <title>Memento Mori: One Year Visualization</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
@@ -359,60 +359,68 @@
 <div class="container">
     <header>
         <div class="logo">Productivity Lab</div>
-        <div class="theme-picker" id="themePicker">
-            <button class="theme-btn btn-rose active" data-theme="rose" title="Rose Blush"></button>
-            <button class="theme-btn btn-midnight" data-theme="midnight" title="Midnight Glow"></button>
-            <button class="theme-btn btn-sage" data-theme="sage" title="Sage Garden"></button>
-            <button class="theme-btn btn-ocean" data-theme="ocean" title="Ocean Breeze"></button>
-            <button class="theme-btn btn-steel" data-theme="steel" title="Steel Minimal"></button>
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+            <div style="position: relative;">
+                <button id="appsBtn" style="background: var(--accent-light); border: 1px solid var(--accent); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--accent);">📱 Apps</button>
+                <div id="appsMenu" style="position: absolute; top: 100%; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; min-width: 180px; z-index: 1000; display: none; margin-top: 0.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); overflow: hidden;">
+                    <button class="dropdown-item" data-app="index.html" style="display: block; width: 100%; padding: 0.75rem 1rem; background: none; border: none; text-align: left; font-family: inherit; font-size: 0.875rem; color: var(--text); cursor: pointer; border-bottom: 1px solid var(--border); transition: background-color 0.2s;">◐ Life in Weeks</button>
+                    <button class="dropdown-item" data-app="fear+death.html" style="display: block; width: 100%; padding: 0.75rem 1rem; background: none; border: none; text-align: left; font-family: inherit; font-size: 0.875rem; color: var(--text); cursor: pointer; border-bottom: 1px solid var(--border); transition: background-color 0.2s;">💀 Memento Mori</button>
+                    <button class="dropdown-item" data-app="fearsetting.html" style="display: block; width: 100%; padding: 0.75rem 1rem; background: none; border: none; text-align: left; font-family: inherit; font-size: 0.875rem; color: var(--text); cursor: pointer; transition: background-color 0.2s;">🎯 Fear Setting</button>
+                </div>
+            </div>
+            <style>
+                .dropdown-item:hover { background: var(--accent-light); }
+                .dropdown-item:last-child { border-bottom: none; }
+            </style>
+            <div class="theme-picker" id="themePicker">
+                <button class="theme-btn btn-rose active" data-theme="rose" title="Rose Blush"></button>
+                <button class="theme-btn btn-midnight" data-theme="midnight" title="Midnight Glow"></button>
+                <button class="theme-btn btn-sage" data-theme="sage" title="Sage Garden"></button>
+                <button class="theme-btn btn-ocean" data-theme="ocean" title="Ocean Breeze"></button>
+                <button class="theme-btn btn-steel" data-theme="steel" title="Steel Minimal"></button>
+            </div>
         </div>
     </header>
 
-    <div class="steps-nav">
-        <button class="step-link active" data-step="1">1. Define / Prevent / Repair</button>
-        <button class="step-link" data-step="2">2. Benefits of Success</button>
-        <button class="step-link" data-step="3">3. Memento Mori Journaling</button>
+    <div class="steps-nav" style="border-bottom: none; padding-bottom: 0; margin-bottom: 2rem;">
+        <h2 style="font-size: 1.75rem; font-weight: 300; margin: 0; color: var(--accent);">Memento Mori: A Living Practice</h2>
     </div>
 
-    <!-- Phase 1 -->
-    <div class="panel active" id="step-1">
+    <!-- Intro Section -->
+    <div class="panel active" id="step-intro" style="display: block;">
         <div class="header-content">
-            <h1>What is the worst that could happen?</h1>
-            <p>Define your fears, how you might prevent them, and how you would repair the situation if they came true.</p>
+            <h2>What is Memento Mori?</h2>
+            <p>An ancient Stoic practice of meditating on your own mortality—not to be morbid, but to gain clarity. Recognizing that life is finite is the most powerful catalyst for living intentionally.</p>
         </div>
 
-        <div id="fearCardsContainer">
-            <!-- Fear cards will be added here via JS -->
+        <div style="margin-bottom: 2.5rem; padding: 1.5rem; background: var(--accent-light); border: 1px solid var(--border); border-radius: 12px;">
+            <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Why This Matters</h3>
+            <p style="margin-bottom: 0.75rem; line-height: 1.8;">When you truly internalize that your time is limited, several things shift:</p>
+            <ul style="margin-left: 1.5rem; line-height: 1.9; color: var(--muted);">
+                <li><strong style="color: var(--text);">Trivial pursuits lose their power.</strong> The things consuming your time suddenly feel different.</li>
+                <li><strong style="color: var(--text);">Your values become clear.</strong> What do you actually want? What matters when time is scarce?</li>
+                <li><strong style="color: var(--text);">Fear loses its grip.</strong> Many fears are revealed as unimportant compared to the fact of mortality.</li>
+                <li><strong style="color: var(--text);">Procrastination dissolves.</strong> When did you plan to start? Why not now?</li>
+            </ul>
         </div>
 
-        <button id="addFearBtn" style="background: var(--accent); color: var(--contrast-text); border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; margin-top: 1rem; font-weight: 600;">+ Add Fear Card</button>
-
-        <div class="download-row">
-            <select id="downloadFormat" class="download-btn" style="background: var(--accent-light); color: var(--text); border: 1px solid var(--border); padding: 0.5rem 0.75rem; font-weight: 600; border-radius: 6px; cursor: pointer;">
-                <option value="json" selected>JSON</option>
-                <option value="txt">TXT</option>
-                <option value="csv">CSV</option>
-                <option value="pdf">PDF (print)</option>
-            </select>
-            <button id="downloadBtn" class="download-btn" type="button">Download your work</button>
+        <div style="margin-bottom: 2.5rem; padding: 1.5rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;">
+            <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">The Exercise</h3>
+            <p style="line-height: 1.8; color: var(--muted);">Below is a visual representation of one year of your life—52 weeks. As you use the journaling space, ask yourself:</p>
+            <ul style="margin-left: 1.5rem; margin-top: 1rem; line-height: 1.9; color: var(--muted);">
+                <li><strong style="color: var(--text);">If I had only one year left—</strong> what changes immediately in my choices?</li>
+                <li><strong style="color: var(--text);">What am I waiting for?</strong> Why delay what matters?</li>
+                <li><strong style="color: var(--text);">What would I regret not doing?</strong> Now, mark it in your calendar.</li>
+                <li><strong style="color: var(--text);">What fears or obstacles are revealed as small in comparison?</strong> Write them down.</li>
+            </ul>
         </div>
-        <div class="hint">Exports your work as JSON/TXT/CSV, or opens a print view for PDF.</div>
     </div>
 
-    <!-- Phase 2 -->
-    <div class="panel" id="step-2">
+    <!-- Memento Mori Journaling Section -->
+    <div class="panel" id="step-3" style="display: block;">
         <div class="header-content">
-            <h1>What might be the benefits?</h1>
-            <p>If you take action and succeed, or even just partially succeed, what are the upsides?</p>
-        </div>
-        <textarea id="benefitsInput" placeholder="List the potential positive outcomes of taking action..." style="min-height: 300px;"></textarea>
-    </div>
-
-    <!-- Phase 3 -->
-    <div class="panel" id="step-3">
-        <div class="header-content">
-            <h1>Memento Mori Journaling</h1>
-            <p>The Stoic practice of meditating on your own death as a clarity tool: not morbidly, but precisely. If you knew you had one year left, what changes immediately?</p>
+            <h1>Your Year Visualized</h1>
+            <p>52 weeks to live, work, love, and grow. How will you use them?</p>
         </div>
 
         <div class="weeks-wrap">
@@ -456,6 +464,26 @@
 </div>
 
 <script>
+    // --- Apps Menu Logic ---
+    const appsBtn = document.getElementById('appsBtn');
+    const appsMenu = document.getElementById('appsMenu');
+
+    appsBtn.addEventListener('click', () => {
+        appsMenu.style.display = appsMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.querySelectorAll('#appsMenu .dropdown-item').forEach(item => {
+        item.addEventListener('click', () => {
+            window.location.href = item.dataset.app;
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!appsBtn.contains(e.target) && !appsMenu.contains(e.target)) {
+            appsMenu.style.display = 'none';
+        }
+    });
+
     // --- Theme Logic ---
     const themePicker = document.getElementById('themePicker');
     const themeBtns = document.querySelectorAll('.theme-btn');
@@ -474,61 +502,7 @@
         if (theme) setTheme(theme);
     });
 
-    // --- Tab Logic ---
-    const stepLinks = document.querySelectorAll('.step-link');
-    const panels = document.querySelectorAll('.panel');
-
-    stepLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            const step = link.getAttribute('data-step');
-            stepLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-            panels.forEach(p => p.classList.remove('active'));
-            document.getElementById(`step-${step}`).classList.add('active');
-        });
-    });
-
-    // --- Fear Cards Logic ---
-    const fearCardsContainer = document.getElementById('fearCardsContainer');
-    const addFearBtn = document.getElementById('addFearBtn');
-
-    function createFearCard(data = { define: '', prevent: '', repair: '' }) {
-        const card = document.createElement('div');
-        card.className = 'fear-card';
-        card.innerHTML = `
-            <div class="fear-grid">
-                <div>
-                    <label>Define</label>
-                    <textarea class="data-input" data-key="define" placeholder="Define the worst case...">${data.define}</textarea>
-                </div>
-                <div>
-                    <label>Prevent</label>
-                    <textarea class="data-input" data-key="prevent" placeholder="How can I prevent this?">${data.prevent}</textarea>
-                </div>
-                <div>
-                    <label>Repair</label>
-                    <textarea class="data-input" data-key="repair" placeholder="How can I fix it?">${data.repair}</textarea>
-                </div>
-            </div>
-            <button class="remove-card" style="background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.75rem;">Remove</button>
-        `;
-
-        card.querySelector('.remove-card').addEventListener('click', () => {
-            card.remove();
-            saveData();
-        });
-
-        card.querySelectorAll('textarea').forEach(ta => {
-            ta.addEventListener('input', saveData);
-        });
-
-        fearCardsContainer.appendChild(card);
-    }
-
-    addFearBtn.addEventListener('click', () => {
-        createFearCard();
-        saveData();
-    });
+    // --- Tab Logic (removed) ---
 
     // --- Life-in-Weeks Grid Logic ---
     const weeksGrid = document.getElementById('weeksGrid');
@@ -582,25 +556,9 @@
     }
 
     function getAllData() {
-        const fearData = [];
-        document.querySelectorAll('.fear-card').forEach(card => {
-            fearData.push({
-                define: card.querySelector('[data-key="define"]').value,
-                prevent: card.querySelector('[data-key="prevent"]').value,
-                repair: card.querySelector('[data-key="repair"]').value
-            });
-        });
-
         return {
-            fears: fearData,
-            benefits: document.getElementById('benefitsInput').value,
-            stopNow: document.getElementById('stopNow').value,
-            startNow: document.getElementById('startNow').value,
-            relationships: document.getElementById('relationships').value,
-            funeralExercise: document.getElementById('funeralExercise').value,
-            epitaph: document.getElementById('epitaph').value,
-            tomorrowAction: document.getElementById('tomorrowAction').value,
-            weeksFilled: getWeeksFilled()
+            weeksFilled: getWeeksFilled(),
+            exportedAt: new Date().toISOString()
         };
     }
 
@@ -894,40 +852,16 @@
         const savedTheme = localStorage.getItem('fearDeathTheme');
         if (savedTheme) setTheme(savedTheme);
 
-        // Load Workshop Data
+        // Load Memento Mori Data
         const savedData = localStorage.getItem('fearDeathData');
         if (savedData) {
             const data = JSON.parse(savedData);
-
-            // Reconstruct Fear Cards
-            if (data.fears && data.fears.length > 0) {
-                data.fears.forEach(f => createFearCard(f));
-            } else {
-                createFearCard(); // Add one empty card by default
-            }
-
-            document.getElementById('benefitsInput').value = data.benefits || '';
-            document.getElementById('stopNow').value = data.stopNow || '';
-            document.getElementById('startNow').value = data.startNow || '';
-            document.getElementById('relationships').value = data.relationships || '';
-            document.getElementById('funeralExercise').value = data.funeralExercise || '';
-            document.getElementById('epitaph').value = data.epitaph || '';
-            document.getElementById('tomorrowAction').value = data.tomorrowAction || '';
             setWeeksFilled(data.weeksFilled || []);
-        } else {
-            createFearCard(); // Default empty card
         }
     }
 
     // Initialize
     loadData();
-
-    // Global listeners for textareas not in fear cards
-    document.querySelectorAll('#benefitsInput, #stopNow, #startNow, #relationships, #funeralExercise, #epitaph, #tomorrowAction').forEach(ta => {
-        ta.addEventListener('input', saveData);
-    });
-
-    document.getElementById('downloadBtn').addEventListener('click', downloadData);
 </script>
 </body>
 </html>

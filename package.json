@@ -1,0 +1,13 @@
+{
+  "name": "productivity-apps",
+  "version": "1.0.0",
+  "description": "Collection of productivity and mindfulness apps",
+  "private": true,
+  "scripts": {
+    "dev": "npx http-server -p 3000 -o",
+    "build": "echo 'Static site - no build required'"
+  },
+  "keywords": ["productivity", "life", "memento-mori"],
+  "author": "",
+  "license": "MIT"
+}
