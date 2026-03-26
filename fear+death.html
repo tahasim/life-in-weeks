@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="rose">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fear Setting + Memento Mori</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Theme: Rose (Default) */
+            --bg: #FDF0F4;
+            --text: #1C0D14;
+            --muted: #AE8898;
+            --border: #ECCDD8;
+            --accent: #C04E72;
+            --accent-light: #F7E8EE;
+            --card-bg: #FFFFFF;
+            --contrast-text: #FFFFFF;
+        }
+
+        [data-theme="midnight"] {
+            --bg: #0F172A;
+            --text: #F1F5F9;
+            --muted: #94A3B8;
+            --border: #1E293B;
+            --accent: #8B5CF6;
+            --accent-light: #2E1065;
+            --card-bg: #1E293B;
+            --contrast-text: #FFFFFF;
+        }
+
+        [data-theme="sage"] {
+            --bg: #F1F5F2;
+            --text: #163020;
+            --muted: #6B8E6F;
+            --border: #DDE8DF;
+            --accent: #4F7942;
+            --accent-light: #E8F0E9;
+            --card-bg: #FFFFFF;
+            --contrast-text: #FFFFFF;
+        }
+
+        [data-theme="ocean"] {
+            --bg: #F0F9FF;
+            --text: #0C4A6E;
+            --muted: #7DD3FC;
+            --border: #E0F2FE;
+            --accent: #0284C7;
+            --accent-light: #E0F2FE;
+            --card-bg: #FFFFFF;
+            --contrast-text: #FFFFFF;
+        }
+
+        [data-theme="steel"] {
+            --bg: #F8FAFC;
+            --text: #0F172A;
+            --muted: #64748B;
+            --border: #E2E8F0;
+            --accent: #334155;
+            --accent-light: #F1F5F9;
+            --card-bg: #FFFFFF;
+            --contrast-text: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* --- Header & Theme Picker --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .theme-picker {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: var(--accent-light);
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+
+        .theme-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .theme-btn:hover { transform: scale(1.2); }
+        .theme-btn.active { border-color: var(--accent); }
+
+        .btn-rose { background: #C04E72; }
+        .btn-midnight { background: #8B5CF6; }
+        .btn-sage { background: #4F7942; }
+        .btn-ocean { background: #0284C7; }
+        .btn-steel { background: #334155; }
+
+        /* --- Tabs / Steps --- */
+        .steps-nav {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .step-link {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.2s;
+        }
+
+        .step-link.active {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .step-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -0.6rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        /* --- Content Panels --- */
+        .panel {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .panel.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-content {
+            margin-bottom: 2.5rem;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-content p {
+            color: var(--muted);
+            max-width: 600px;
+        }
+
+        /* --- Fear Grid (Phase 1) --- */
+        .fear-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .fear-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .fear-card label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: inherit;
+            color: var(--text);
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* --- Memento Mori Journal --- */
+        .journal {
+            margin-top: 2rem;
+        }
+
+        .journal label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .download-row {
+            margin-top: 1.25rem;
+            display: flex;
+            justify-content: flex-start;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background: var(--accent);
+            color: var(--contrast-text);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .hint {
+            color: var(--muted);
+            font-size: 0.875rem;
+            max-width: 650px;
+            margin-top: 0.25rem;
+        }
+
+        .weeks-wrap {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--card-bg);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .weeks-legend {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            color: var(--muted);
+            font-size: 0.875rem;
+            margin-top: 0.75rem;
+        }
+
+        .legend-swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: transparent;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+
+        .legend-swatch.filled {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .weeks-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .week-cell {
+            aspect-ratio: 1 / 1;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            cursor: pointer;
+            transition: transform 0.05s, background-color 0.2s, border-color 0.2s;
+        }
+
+        .week-cell:hover {
+            transform: translateY(-1px);
+        }
+
+        .week-cell.filled {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: 5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.8125rem;
+            color: var(--muted);
+        }
+
+        @media (max-width: 768px) {
+            .fear-grid { grid-template-columns: 1fr; }
+            .weeks-grid { grid-template-columns: repeat(8, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo">Productivity Lab</div>
+        <div class="theme-picker" id="themePicker">
+            <button class="theme-btn btn-rose active" data-theme="rose" title="Rose Blush"></button>
+            <button class="theme-btn btn-midnight" data-theme="midnight" title="Midnight Glow"></button>
+            <button class="theme-btn btn-sage" data-theme="sage" title="Sage Garden"></button>
+            <button class="theme-btn btn-ocean" data-theme="ocean" title="Ocean Breeze"></button>
+            <button class="theme-btn btn-steel" data-theme="steel" title="Steel Minimal"></button>
+        </div>
+    </header>
+
+    <div class="steps-nav">
+        <button class="step-link active" data-step="1">1. Define / Prevent / Repair</button>
+        <button class="step-link" data-step="2">2. Benefits of Success</button>
+        <button class="step-link" data-step="3">3. Memento Mori Journaling</button>
+    </div>
+
+    <!-- Phase 1 -->
+    <div class="panel active" id="step-1">
+        <div class="header-content">
+            <h1>What is the worst that could happen?</h1>
+            <p>Define your fears, how you might prevent them, and how you would repair the situation if they came true.</p>
+        </div>
+
+        <div id="fearCardsContainer">
+            <!-- Fear cards will be added here via JS -->
+        </div>
+
+        <button id="addFearBtn" style="background: var(--accent); color: var(--contrast-text); border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; margin-top: 1rem; font-weight: 600;">+ Add Fear Card</button>
+
+        <div class="download-row">
+            <select id="downloadFormat" class="download-btn" style="background: var(--accent-light); color: var(--text); border: 1px solid var(--border); padding: 0.5rem 0.75rem; font-weight: 600; border-radius: 6px; cursor: pointer;">
+                <option value="json" selected>JSON</option>
+                <option value="txt">TXT</option>
+                <option value="csv">CSV</option>
+                <option value="pdf">PDF (print)</option>
+            </select>
+            <button id="downloadBtn" class="download-btn" type="button">Download your work</button>
+        </div>
+        <div class="hint">Exports your work as JSON/TXT/CSV, or opens a print view for PDF.</div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="panel" id="step-2">
+        <div class="header-content">
+            <h1>What might be the benefits?</h1>
+            <p>If you take action and succeed, or even just partially succeed, what are the upsides?</p>
+        </div>
+        <textarea id="benefitsInput" placeholder="List the potential positive outcomes of taking action..." style="min-height: 300px;"></textarea>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="panel" id="step-3">
+        <div class="header-content">
+            <h1>Memento Mori Journaling</h1>
+            <p>The Stoic practice of meditating on your own death as a clarity tool: not morbidly, but precisely. If you knew you had one year left, what changes immediately?</p>
+        </div>
+
+        <div class="weeks-wrap">
+            <h2>Life in Weeks (52)</h2>
+            <p style="color: var(--muted); margin-top: 0.5rem; max-width: 650px;">
+                Click squares to mark weeks you have already lived. The remaining empty squares are the “room to choose” you still have.
+            </p>
+
+            <div class="weeks-legend" aria-hidden="true">
+                <div><span class="legend-swatch filled"></span> Filled (already lived)</div>
+                <div><span class="legend-swatch"></span> Empty (still yours)</div>
+            </div>
+
+            <div id="weeksGrid" class="weeks-grid" aria-label="Life in weeks grid"></div>
+        </div>
+
+        <div class="journal">
+            <label for="stopNow">If I had one year left, what would I stop doing immediately?</label>
+            <textarea id="stopNow" placeholder="List the habits, obligations, and mental loops to cut right away..."></textarea>
+
+            <label for="startNow">What would I start doing?</label>
+            <textarea id="startNow" placeholder="List the actions and disciplines to begin immediately..."></textarea>
+
+            <label for="relationships">What relationships would I repair (or deepen) first?</label>
+            <textarea id="relationships" placeholder="Names, conversations, and small acts of repair you would make now."></textarea>
+
+            <label for="funeralExercise">Funeral exercise: what would you want people to say about you?</label>
+            <textarea id="funeralExercise" placeholder="What virtues did you practice? What do you want to be remembered for?"></textarea>
+
+            <label for="epitaph">Write an epitaph (1-2 lines)</label>
+            <textarea id="epitaph" placeholder="As if carved on a tombstone: short, true, and specific."></textarea>
+
+            <label for="tomorrowAction">Your next 24 hours (smallest decisive action)</label>
+            <textarea id="tomorrowAction" placeholder="One concrete step you will take within the next day."></textarea>
+        </div>
+    </div>
+
+    <footer>
+        "You could leave life right now. Let that determine what you do and say." — Marcus Aurelius (in spirit)
+    </footer>
+</div>
+
+<script>
+    // --- Theme Logic ---
+    const themePicker = document.getElementById('themePicker');
+    const themeBtns = document.querySelectorAll('.theme-btn');
+    const html = document.documentElement;
+
+    function setTheme(theme) {
+        html.setAttribute('data-theme', theme);
+        themeBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-theme') === theme);
+        });
+        localStorage.setItem('fearDeathTheme', theme);
+    }
+
+    themePicker.addEventListener('click', (e) => {
+        const theme = e.target.getAttribute('data-theme');
+        if (theme) setTheme(theme);
+    });
+
+    // --- Tab Logic ---
+    const stepLinks = document.querySelectorAll('.step-link');
+    const panels = document.querySelectorAll('.panel');
+
+    stepLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            const step = link.getAttribute('data-step');
+            stepLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            panels.forEach(p => p.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+        });
+    });
+
+    // --- Fear Cards Logic ---
+    const fearCardsContainer = document.getElementById('fearCardsContainer');
+    const addFearBtn = document.getElementById('addFearBtn');
+
+    function createFearCard(data = { define: '', prevent: '', repair: '' }) {
+        const card = document.createElement('div');
+        card.className = 'fear-card';
+        card.innerHTML = `
+            <div class="fear-grid">
+                <div>
+                    <label>Define</label>
+                    <textarea class="data-input" data-key="define" placeholder="Define the worst case...">${data.define}</textarea>
+                </div>
+                <div>
+                    <label>Prevent</label>
+                    <textarea class="data-input" data-key="prevent" placeholder="How can I prevent this?">${data.prevent}</textarea>
+                </div>
+                <div>
+                    <label>Repair</label>
+                    <textarea class="data-input" data-key="repair" placeholder="How can I fix it?">${data.repair}</textarea>
+                </div>
+            </div>
+            <button class="remove-card" style="background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.75rem;">Remove</button>
+        `;
+
+        card.querySelector('.remove-card').addEventListener('click', () => {
+            card.remove();
+            saveData();
+        });
+
+        card.querySelectorAll('textarea').forEach(ta => {
+            ta.addEventListener('input', saveData);
+        });
+
+        fearCardsContainer.appendChild(card);
+    }
+
+    addFearBtn.addEventListener('click', () => {
+        createFearCard();
+        saveData();
+    });
+
+    // --- Life-in-Weeks Grid Logic ---
+    const weeksGrid = document.getElementById('weeksGrid');
+
+    function renderWeeksGrid() {
+        if (!weeksGrid) return;
+        weeksGrid.innerHTML = '';
+        for (let i = 0; i < 52; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'week-cell';
+            cell.dataset.index = String(i);
+            cell.title = `Week ${i + 1}`;
+            cell.setAttribute('role', 'button');
+            cell.setAttribute('tabindex', '0');
+
+            function toggle() {
+                cell.classList.toggle('filled');
+                saveData();
+            }
+
+            cell.addEventListener('click', toggle);
+            cell.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggle();
+                }
+            });
+
+            weeksGrid.appendChild(cell);
+        }
+    }
+
+    function setWeeksFilled(filledIndices) {
+        const set = new Set((filledIndices || []).map(n => Number(n)).filter(n => Number.isFinite(n)));
+        document.querySelectorAll('.week-cell').forEach(cell => {
+            const idx = Number(cell.dataset.index);
+            cell.classList.toggle('filled', set.has(idx));
+        });
+    }
+
+    function getWeeksFilled() {
+        return Array.from(document.querySelectorAll('.week-cell.filled'))
+            .map(cell => Number(cell.dataset.index))
+            .filter(n => Number.isFinite(n));
+    }
+
+    // --- Persistence Logic ---
+    function saveData() {
+        const data = getAllData();
+        localStorage.setItem('fearDeathData', JSON.stringify(data));
+    }
+
+    function getAllData() {
+        const fearData = [];
+        document.querySelectorAll('.fear-card').forEach(card => {
+            fearData.push({
+                define: card.querySelector('[data-key="define"]').value,
+                prevent: card.querySelector('[data-key="prevent"]').value,
+                repair: card.querySelector('[data-key="repair"]').value
+            });
+        });
+
+        return {
+            fears: fearData,
+            benefits: document.getElementById('benefitsInput').value,
+            stopNow: document.getElementById('stopNow').value,
+            startNow: document.getElementById('startNow').value,
+            relationships: document.getElementById('relationships').value,
+            funeralExercise: document.getElementById('funeralExercise').value,
+            epitaph: document.getElementById('epitaph').value,
+            tomorrowAction: document.getElementById('tomorrowAction').value,
+            weeksFilled: getWeeksFilled()
+        };
+    }
+
+    function csvEscape(value) {
+        const v = String(value ?? '');
+        const needsQuotes = /[",\n\r]/.test(v);
+        const escaped = v.replace(/"/g, '""');
+        return needsQuotes ? `"${escaped}"` : escaped;
+    }
+
+    function downloadData() {
+        const format = (document.getElementById('downloadFormat')?.value || 'json').toLowerCase();
+        const data = getAllData();
+        const exportedAt = new Date().toISOString();
+        const datePart = new Date().toISOString().slice(0, 10);
+
+        if (format === 'pdf') {
+            function escapeHtml(unsafe) {
+                return String(unsafe ?? '').replace(/[&<>"']/g, (ch) => {
+                    switch (ch) {
+                        case '&': return '&amp;';
+                        case '<': return '&lt;';
+                        case '>': return '&gt;';
+                        case '"': return '&quot;';
+                        case "'": return '&#39;';
+                        default: return ch;
+                    }
+                });
+            }
+
+            const styles = getComputedStyle(document.documentElement);
+            const bg = styles.getPropertyValue('--bg').trim() || '#ffffff';
+            const text = styles.getPropertyValue('--text').trim() || '#111111';
+            const muted = styles.getPropertyValue('--muted').trim() || '#666666';
+            const accent = styles.getPropertyValue('--accent').trim() || '#c04e72';
+            const border = styles.getPropertyValue('--border').trim() || '#e0e0e0';
+
+            const weeksFilledSet = new Set((data.weeksFilled || []).map(n => Number(n)).filter(n => Number.isFinite(n)));
+            let weeksCellsHtml = '';
+            for (let i = 0; i < 52; i++) {
+                const filled = weeksFilledSet.has(i);
+                weeksCellsHtml += `<div class="cell${filled ? ' filled' : ''}"></div>`;
+            }
+
+            const fearsHtml = (data.fears && data.fears.length)
+                ? data.fears.map((f, idx) => {
+                    const n = idx + 1;
+                    return `
+                        <div class="fear-block">
+                            <div class="fear-title">Fear ${n}</div>
+                            <div><span class="k">Define:</span> ${escapeHtml(f.define)}</div>
+                            <div><span class="k">Prevent:</span> ${escapeHtml(f.prevent)}</div>
+                            <div><span class="k">Repair:</span> ${escapeHtml(f.repair)}</div>
+                        </div>
+                    `;
+                }).join('')
+                : `<div class="muted">(no fear cards yet)</div>`;
+
+            const theme = document.documentElement.getAttribute('data-theme') || '';
+
+            const w = window.open('', '_blank');
+            if (!w) {
+                alert('Pop-up blocked. Please allow pop-ups to export PDF.');
+                return;
+            }
+
+            const printHtml = `<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Fear Setting + Memento Mori (PDF)</title>
+    <style>
+        @page { margin: 16mm; }
+        html, body { margin: 0; padding: 0; }
+        body {
+            font-family: Inter, Arial, sans-serif;
+            color: ${text};
+            background: ${bg};
+            line-height: 1.35;
+        }
+        .wrap { max-width: 980px; margin: 0 auto; }
+        h1 {
+            font-size: 20pt;
+            margin: 0 0 6pt 0;
+            font-weight: 600;
+        }
+        .sub {
+            color: ${muted};
+            font-size: 10.5pt;
+            margin-bottom: 14pt;
+        }
+        h2 {
+            font-size: 12.5pt;
+            margin: 14pt 0 6pt 0;
+            font-weight: 600;
+            border-top: 1px solid ${border};
+            padding-top: 8pt;
+        }
+        .section { margin-bottom: 10pt; }
+        .fear-block {
+            border: 1px solid ${border};
+            border-radius: 10px;
+            padding: 8pt 10pt;
+            margin: 8pt 0;
+        }
+        .fear-title { font-weight: 700; margin-bottom: 4pt; }
+        .k { font-weight: 700; }
+        .pre { white-space: pre-wrap; }
+        .weeks-wrap {
+            border: 1px solid ${border};
+            border-radius: 10px;
+            padding: 10pt;
+            margin-top: 8pt;
+        }
+        .weeks-legend { color: ${muted}; font-size: 10.5pt; margin-bottom: 8pt; display: flex; gap: 10pt; }
+        .sw { width: 12px; height: 12px; border-radius: 3px; border: 1px solid ${border}; background: transparent; display: inline-block; margin-right: 6px; }
+        .sw.filled { background: ${accent}; border-color: ${accent}; }
+        .weeks-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            gap: 3px;
+        }
+        .cell {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border: 1px solid ${border};
+            border-radius: 3px;
+            background: transparent;
+        }
+        .cell.filled { background: ${accent}; border-color: ${accent}; }
+        .muted { color: ${muted}; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h1>Fear Setting + Memento Mori</h1>
+        <div class="sub">Exported at: ${escapeHtml(exportedAt)}${theme ? ` &middot; Theme: ${escapeHtml(theme)}` : ''}</div>
+
+        <div class="section">
+            <h2>Fears</h2>
+            ${fearsHtml}
+        </div>
+
+        <div class="section">
+            <h2>Benefits of Success</h2>
+            <div class="pre">${escapeHtml(data.benefits || '')}</div>
+        </div>
+
+        <div class="section">
+            <h2>Memento Mori (One Year Left)</h2>
+            <div><span class="k">Stop doing immediately:</span><div class="pre">${escapeHtml(data.stopNow || '')}</div></div>
+            <div style="margin-top:6pt;"><span class="k">Start doing:</span><div class="pre">${escapeHtml(data.startNow || '')}</div></div>
+            <div style="margin-top:6pt;"><span class="k">Relationships to repair (or deepen):</span><div class="pre">${escapeHtml(data.relationships || '')}</div></div>
+            <div style="margin-top:6pt;"><span class="k">Funeral exercise:</span><div class="pre">${escapeHtml(data.funeralExercise || '')}</div></div>
+            <div style="margin-top:6pt;"><span class="k">Epitaph (1–2 lines):</span><div class="pre">${escapeHtml(data.epitaph || '')}</div></div>
+            <div style="margin-top:6pt;"><span class="k">Next 24 hours:</span><div class="pre">${escapeHtml(data.tomorrowAction || '')}</div></div>
+        </div>
+
+        <div class="section">
+            <h2>Life in Weeks (52) - Filled</h2>
+            <div class="weeks-wrap">
+                <div class="weeks-legend">
+                    <div><span class="sw filled"></span> Filled (already lived)</div>
+                    <div><span class="sw"></span> Empty (still yours)</div>
+                </div>
+                <div class="weeks-grid">${weeksCellsHtml}</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+
+            w.document.open();
+            w.document.write(printHtml);
+            w.document.close();
+            w.focus();
+            w.print();
+            return;
+        }
+
+        if (format === 'txt') {
+            const weeks = (data.weeksFilled || []).sort((a, b) => a - b);
+            const weeksLine = weeks.length ? weeks.join(', ') : '(none yet)';
+
+            const lines = [];
+            lines.push('FEAR SETTING + MEMENTO MORI');
+            lines.push(`Exported at: ${exportedAt}`);
+            lines.push('');
+            lines.push('FEARS');
+            if (!data.fears || data.fears.length === 0) {
+                lines.push('(no fear cards yet)');
+            } else {
+                data.fears.forEach((f, idx) => {
+                    lines.push(`${idx + 1}. Define: ${f.define}`);
+                    lines.push(`   Prevent: ${f.prevent}`);
+                    lines.push(`   Repair: ${f.repair}`);
+                });
+            }
+
+            lines.push('');
+            lines.push('BENEFITS OF SUCCESS');
+            lines.push(data.benefits || '');
+
+            lines.push('');
+            lines.push('MEMENTO MORI (ONE YEAR LEFT)');
+            lines.push('Stop doing immediately:');
+            lines.push(data.stopNow || '');
+            lines.push('');
+            lines.push('Start doing immediately:');
+            lines.push(data.startNow || '');
+            lines.push('');
+            lines.push('Relationships to repair (or deepen) first:');
+            lines.push(data.relationships || '');
+            lines.push('');
+            lines.push('Funeral exercise: what would you want people to say about you?');
+            lines.push(data.funeralExercise || '');
+            lines.push('');
+            lines.push('Epitaph (1-2 lines):');
+            lines.push(data.epitaph || '');
+            lines.push('');
+            lines.push('Next 24 hours (smallest decisive action):');
+            lines.push(data.tomorrowAction || '');
+
+            lines.push('');
+            lines.push('LIFE IN WEEKS (52) - FILLED WEEKS');
+            lines.push(weeksLine);
+
+            const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fear-setting-memento-mori-${datePart}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            return;
+        }
+
+        if (format === 'csv') {
+            const rows = [];
+            rows.push(['key', 'value'].map(csvEscape).join(','));
+
+            if (data.fears && data.fears.length) {
+                data.fears.forEach((f, i) => {
+                    rows.push([`fear[${i}].define`, f.define].map(csvEscape).join(','));
+                    rows.push([`fear[${i}].prevent`, f.prevent].map(csvEscape).join(','));
+                    rows.push([`fear[${i}].repair`, f.repair].map(csvEscape).join(','));
+                });
+            }
+
+            rows.push(['benefits', data.benefits || ''].map(csvEscape).join(','));
+            rows.push(['stopNow', data.stopNow || ''].map(csvEscape).join(','));
+            rows.push(['startNow', data.startNow || ''].map(csvEscape).join(','));
+            rows.push(['relationships', data.relationships || ''].map(csvEscape).join(','));
+            rows.push(['funeralExercise', data.funeralExercise || ''].map(csvEscape).join(','));
+            rows.push(['epitaph', data.epitaph || ''].map(csvEscape).join(','));
+            rows.push(['tomorrowAction', data.tomorrowAction || ''].map(csvEscape).join(','));
+            rows.push(['weeksFilled', (data.weeksFilled || []).sort((a, b) => a - b).join(', ')].map(csvEscape).join(','));
+
+            const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fear-setting-memento-mori-${datePart}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            return;
+        }
+
+        // Default: JSON
+        const payload = { exportedAt, ...data };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `fear-setting-memento-mori-${datePart}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    }
+
+    function loadData() {
+        // Build grid first so we can apply saved "filled" state.
+        renderWeeksGrid();
+
+        // Load Theme
+        const savedTheme = localStorage.getItem('fearDeathTheme');
+        if (savedTheme) setTheme(savedTheme);
+
+        // Load Workshop Data
+        const savedData = localStorage.getItem('fearDeathData');
+        if (savedData) {
+            const data = JSON.parse(savedData);
+
+            // Reconstruct Fear Cards
+            if (data.fears && data.fears.length > 0) {
+                data.fears.forEach(f => createFearCard(f));
+            } else {
+                createFearCard(); // Add one empty card by default
+            }
+
+            document.getElementById('benefitsInput').value = data.benefits || '';
+            document.getElementById('stopNow').value = data.stopNow || '';
+            document.getElementById('startNow').value = data.startNow || '';
+            document.getElementById('relationships').value = data.relationships || '';
+            document.getElementById('funeralExercise').value = data.funeralExercise || '';
+            document.getElementById('epitaph').value = data.epitaph || '';
+            document.getElementById('tomorrowAction').value = data.tomorrowAction || '';
+            setWeeksFilled(data.weeksFilled || []);
+        } else {
+            createFearCard(); // Default empty card
+        }
+    }
+
+    // Initialize
+    loadData();
+
+    // Global listeners for textareas not in fear cards
+    document.querySelectorAll('#benefitsInput, #stopNow, #startNow, #relationships, #funeralExercise, #epitaph, #tomorrowAction').forEach(ta => {
+        ta.addEventListener('input', saveData);
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', downloadData);
+</script>
+</body>
+</html>
