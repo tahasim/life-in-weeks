@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Goals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #FDF0F4;
+      --text:         #1C0D14;
+      --muted:        #AE8898;
+      --border:       #ECCDD8;
+      --cell-lived:   #3D1528;
+      --rose:         #C04E72;
+      --rose-light:   #F7E8EE;
+    }
+
+    html {
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 300;
+    }
+
+    body {
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--rose-light);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .header-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .header-btn {
+      background: none;
+      border: none;
+      color: var(--rose);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s;
+    }
+
+    .header-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .content {
+      padding: 1rem;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .goal-item {
+      padding: 0.75rem;
+      background: var(--rose-light);
+      border-left: 3px solid var(--rose);
+      border-radius: 4px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+
+    .goal-item:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .goal-item.done {
+      opacity: 0.6;
+      text-decoration: line-through;
+      border-left-color: var(--muted);
+    }
+
+    .goal-checkbox {
+      width: 18px;
+      min-width: 18px;
+      height: 18px;
+      cursor: pointer;
+      margin-top: 2px;
+    }
+
+    .goal-text {
+      flex: 1;
+      word-wrap: break-word;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    .footer {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .footer-btn {
+      flex: 1;
+      padding: 0.5rem;
+      background: var(--cell-lived);
+      color: var(--bg);
+      border: none;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      font-family: inherit;
+    }
+
+    .footer-btn:hover {
+      opacity: 0.85;
+    }
+
+    .footer-btn.secondary {
+      background: transparent;
+      color: var(--rose);
+      border: 1px solid var(--border);
+    }
+
+    .footer-btn.secondary:hover {
+      background: var(--rose-light);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="header-title">📌 This Week's Goals</span>
+    <div class="header-controls">
+      <button class="header-btn" id="minimizeBtn" title="Minimize">−</button>
+      <button class="header-btn" id="closeBtn" title="Close">×</button>
+    </div>
+  </div>
+
+  <div class="content" id="content">
+    <div class="empty">No goals yet</div>
+  </div>
+
+  <div class="footer">
+    <button class="footer-btn secondary" id="openFullBtn">✎ Edit</button>
+    <button class="footer-btn" id="refreshBtn">⟳ Refresh</button>
+  </div>
+
+  <script>
+    const content = document.getElementById('content');
+    const minimizeBtn = document.getElementById('minimizeBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const openFullBtn = document.getElementById('openFullBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+
+    function loadGoals() {
+      const dob = localStorage.getItem('birthDate');
+      if (!dob) {
+        content.innerHTML = '<div class="empty">Open main app first and set your birth date</div>';
+        return;
+      }
+      
+      const today = new Date();
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - today.getDay());
+      const weekKey = `goals-${dob}-${weekStart.toISOString().split('T')[0]}`;
+      
+      const data = JSON.parse(localStorage.getItem(weekKey) || 'null');
+      const goals = data && data.goals ? data.goals : [];
+
+      if (goals.length === 0) {
+        content.innerHTML = '<div class="empty">No goals set for this week</div>';
+        return;
+      }
+
+      content.innerHTML = goals.map((g, i) => `
+        <div class="goal-item ${g.done ? 'done' : ''}" data-index="${i}">
+          <input type="checkbox" class="goal-checkbox" ${g.done ? 'checked' : ''} onchange="window.toggleGoal(${i})">
+          <span class="goal-text">${g.text}</span>
+        </div>
+      `).join('');
+    }
+
+    window.toggleGoal = function(index) {
+      const dob = localStorage.getItem('birthDate');
+      if (!dob) return;
+      
+      const today = new Date();
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - today.getDay());
+      const weekKey = `goals-${dob}-${weekStart.toISOString().split('T')[0]}`;
+      
+      const data = JSON.parse(localStorage.getItem(weekKey) || '{}');
+      if (!data.goals) data.goals = [];
+      data.goals[index].done = !data.goals[index].done;
+      localStorage.setItem(weekKey, JSON.stringify(data));
+      
+      loadGoals();
+    };
+
+    minimizeBtn.addEventListener('click', () => {
+      if (window.electronAPI) {
+        window.electronAPI.minimize();
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      if (window.electronAPI) {
+        window.electronAPI.close();
+      }
+    });
+
+    openFullBtn.addEventListener('click', () => {
+      if (window.electronAPI) {
+        window.electronAPI.showGoals();
+      }
+    });
+
+    refreshBtn.addEventListener('click', loadGoals);
+
+    // Refresh when storage changes
+    window.addEventListener('storage', loadGoals);
+
+    loadGoals();
+  </script>
+</body>
+</html>
